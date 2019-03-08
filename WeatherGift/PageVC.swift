@@ -12,6 +12,9 @@ class PageVC: UIPageViewController {
 
     var currentPage = 0
     var locationsArray = ["Local City", "Sydney, Australia", "Accra, Ghana", "Uglich, Russia"]
+    var pageControl: UIPageControl!
+    var barButtonWidth: CGFloat = 44
+    var barButtonHeight: CGFloat = 44
     
     
     override func viewDidLoad() {
@@ -23,6 +26,26 @@ class PageVC: UIPageViewController {
         setViewControllers([createDetailVC(forPage: 0)], direction: .forward, animated: false, completion: nil)
     }
     
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        configurePageControl()
+    }
+    
+    func configurePageControl () {
+        let pageControlHeight: CGFloat = barButtonHeight
+        let pageControlWidth: CGFloat = view.frame.width - (barButtonWidth * 2)
+        
+        let safeHeight = view.frame.height - view.safeAreaInsets.bottom
+
+        pageControl = UIPageControl(frame: CGRect(x: (view.frame.width - pageControlWidth) / 2, y: safeHeight - pageControlHeight, width: pageControlWidth, height: pageControlHeight))
+        pageControl.pageIndicatorTintColor = UIColor.lightGray
+        pageControl.currentPageIndicatorTintColor = UIColor.black
+        pageControl.numberOfPages = locationsArray.count
+        pageControl.currentPage = currentPage
+        view.addSubview(pageControl)
+    }
 
     
     func createDetailVC(forPage page: Int) -> DetailVC {
@@ -57,5 +80,11 @@ extension PageVC: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
             }
         }
         return nil
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        if let currentViewController = pageViewController.viewControllers?[0] as? DetailVC {
+            pageControl.currentPage = currentViewController.currentPage
+        }
     }
 }
