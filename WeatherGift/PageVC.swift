@@ -69,17 +69,35 @@ class PageVC: UIPageViewController {
         listButton = UIButton(frame: CGRect(x: view.frame.width - barButtonWidth, y: safeHeight - barButtonHeight, width: barButtonWidth, height: barButtonHeight))
         listButton.setImage(UIImage(named: "listbutton"), for: .normal)
         listButton.setImage(UIImage(named: "listbutton-highlighted"), for: .highlighted)
-        listButton.addTarget(self, action: #selector(segueToLocationVC), for: .touchUpInside)
+        listButton.addTarget(self, action: #selector(segueToListVC), for: .touchUpInside)
         view.addSubview(listButton)
     }
     
     
-    @objc func segueToLocationVC () {
-        print("Hey You clicked me")
+    //MARK:- Segues
+    
+    @objc func segueToListVC () {
+        performSegue(withIdentifier: "ToListVC", sender: nil)
     }
     
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ToListVC"
+        {
+            let destination = segue.destination as! ListVC //casting to ListVC
+            destination.locationsArray = locationsArray
+            destination.currentPage = currentPage
+            
+        }
+    }
     
+    
+    @IBAction func unwindFromListVC(sender: UIStoryboardSegue)
+    {
+        pageControl.numberOfPages = locationsArray.count
+        pageControl.currentPage = currentPage
+        setViewControllers([createDetailVC(forPage: currentPage)], direction: .forward, animated: false, completion: nil)
+    }
     
     
     
@@ -127,6 +145,10 @@ extension PageVC: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
             pageControl.currentPage = currentViewController.currentPage
         }
     }
+    
+    
+    
+    
     
     @objc func pageControlPressed() {
         if let currentViewController = self.viewControllers?[0] as? DetailVC{
