@@ -127,7 +127,11 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Unm-in-lMB"/>
-                                    <barButtonItem title="Item" systemItem="add" id="uFP-Ja-ed9"/>
+                                    <barButtonItem title="Item" systemItem="add" id="uFP-Ja-ed9">
+                                        <connections>
+                                            <action selector="addBarButtonPressed:" destination="ghV-PT-Jzc" id="Idi-4O-blG"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
