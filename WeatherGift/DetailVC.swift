@@ -43,14 +43,24 @@ class DetailVC: UIViewController {
     }
     
     func updateUserInterface() {
-        locationLabel.text = locationsArray[currentPage].name
-        dateLabel.text = locationsArray[currentPage].coordinates
-        temperatureLabel.text = locationsArray[currentPage].currentTemp
-        summaryLabel.text = locationsArray[currentPage].currentSummary
-        currentImage.image = UIImage(named: locationsArray[currentPage].currentIcon)
+        let location = locationsArray[currentPage]
+        locationLabel.text = location.name
+        let dateString = formatTimeForTimeZone(unixDate: location.currentTime, timeZone: location.timeZone)
+        dateLabel.text = dateString
+        temperatureLabel.text = location.currentTemp
+        summaryLabel.text = location.currentSummary
+        currentImage.image = UIImage(named: location.currentIcon)
         //print("%%%%% currentTemp inside updateUserInterface = \(locationsArray[currentPage].currentTemp)")
     }
 
+    func formatTimeForTimeZone(unixDate: TimeInterval, timeZone: String) -> String{
+        let usableDate = Date(timeIntervalSince1970: unixDate)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE, MMM dd, y"
+        dateFormatter.timeZone = TimeZone(identifier: timeZone)
+        let dateString = dateFormatter.string(from: usableDate)
+        return dateString
+    }
 }
 
 extension DetailVC: CLLocationManagerDelegate {
@@ -92,7 +102,7 @@ extension DetailVC: CLLocationManagerDelegate {
         let currentLongitude = currentLocation.coordinate.longitude
         let currentCoordinates = "\(currentLatitude),\(currentLongitude)"
         //print(currentCoordinates)
-        dateLabel.text = currentCoordinates
+        //dateLabel.text = currentCoordinates
         geoCoder.reverseGeocodeLocation(currentLocation, completionHandler: {placemarks, error in
             if placemarks != nil {
                 let placemark = placemarks?.last
