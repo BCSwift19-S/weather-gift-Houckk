@@ -30,7 +30,7 @@ class DayWeatherCell: UITableViewCell {
     }
 
     
-    func update(with dailyForcast: WeatherLocation.DailyForecast, timeZone: String)
+    func update(with dailyForcast: WeatherDetail.DailyForecast, timeZone: String)
     {
         dayCellIcon.image = UIImage(named: dailyForcast.dailyIcon)
         dayCellSummary.text = dailyForcast.dailySummary
